@@ -1,13 +1,40 @@
 #!/bin/bash
+#
+# Date: 2020-01-12
+# Environment: Linux/AWS
+# Author: oliverwainwright.io
+# Description: Display home/office public IP Address on AWS S3 Website
+# Prerequisites: AWS CLI tool, AWS Account, AWS S3 Bucket, AWS IAM Policy for
+# account to access your S3 Bucket and nothing else
 
+# Your S3 bucket name
+# Replace "YOUR_BUCKET" with your actual S3 Bucket Name
+YOUR_BUCKET="S3BucketName"
+
+#set variables
 dir="/var/tmp"
-bin="$dir/bin"
 html="$dir/html"
-iam="$dir/iam"
+s3Website="s3://$YOUR_BUCKET/"
 
-s3Website="s3://ogun.exit9web.com/"
+#create directory for webpages
+if [ ! -d $html ]
+then
+	mkdir $html
+fi
+
+#feeling lazy, need to add a check to see if this is successful
+#use one of these to set the $myIP variable
 myIP=`curl http://ifconfig.co`
+#myIP=`curl http://ifconfig.me` 
+#myIP=`curl http://icanhazip.com`
 
+if [ -z $myIP ]
+then
+	echo "\$myIP is not set"
+	exit
+fi
+	
+#get previous ip address to compare with current ip address
 if [ -f $dir/prevIP.txt ]
 then
 	prevIP=`cat $dir/prevIP.txt`
@@ -15,11 +42,14 @@ else
 	prevIP="none"
 fi
 
+#compare current ip address with previous ip address
+#only update new webpages if the public ip address changes
 if [ $myIP != $prevIP ]
 then
+	echo "we've got a new ip address: $myIP"
+	echo "$myIP" > $dir/prevIP.txt
 
-echo "$myIP" > $dir/prevIP.txt
-
+#here document for index.html
 cat <<- EOF > $html/index.html
 <!DOCTYPE html>
 <html>
@@ -31,6 +61,7 @@ cat <<- EOF > $html/index.html
 </html>
 EOF
 
+#here document for error.html
 cat <<- EOF > $html/error.html
 <!DOCTYPE html>
 <html>
@@ -42,6 +73,9 @@ cat <<- EOF > $html/error.html
 </html>
 EOF
 
-echo "s3 cp $html error.html $s3Website"
+echo "upload new webpages to s3 static website"
 aws s3 cp $html $s3Website --recursive
+else
+	echo "no change in ip address: $myIP"
+	echo "no webpages uploaded"
 fi	
