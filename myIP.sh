@@ -1,10 +1,16 @@
 #!/bin/bash
 
+dir="/var/tmp"
+bin="$dir/bin"
+html="$dir/html"
+iam="$dir/iam"
+
+s3Website="s3://ogun.exit9web.com/"
 myIP=`curl http://ifconfig.co`
 
-if [ -f prevIP.txt ]
+if [ -f $dir/prevIP.txt ]
 then
-	prevIP=`cat prevIP.txt`
+	prevIP=`cat $dir/prevIP.txt`
 else
 	prevIP="none"
 fi
@@ -12,9 +18,9 @@ fi
 if [ $myIP != $prevIP ]
 then
 
-echo "$myIP" >> prevIP.txt
+echo "$myIP" > $dir/prevIP.txt
 
-cat <<- EOF > index.html
+cat <<- EOF > $html/index.html
 <!DOCTYPE html>
 <html>
 <body>
@@ -25,7 +31,7 @@ cat <<- EOF > index.html
 </html>
 EOF
 
-cat <<- EOF > error.html
+cat <<- EOF > $html/error.html
 <!DOCTYPE html>
 <html>
 <body>
@@ -36,5 +42,6 @@ cat <<- EOF > error.html
 </html>
 EOF
 
-echo "s3 cp index.html error.html $s3website"
+echo "s3 cp $html error.html $s3Website"
+aws s3 cp $html $s3Website --recursive
 fi	
