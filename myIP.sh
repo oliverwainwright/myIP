@@ -30,7 +30,7 @@ myIP=`curl http://ifconfig.co`
 
 if [ -z $myIP ]
 then
-	echo "\$myIP is not set"
+	echo "\$myIP is not set" | logger -t myIP
 	exit
 fi
 	
@@ -46,7 +46,7 @@ fi
 #only update new webpages if the public ip address changes
 if [ $myIP != $prevIP ]
 then
-	echo "we've got a new ip address: $myIP"
+	echo "we've got a new ip address: $myIP" | logger -t myIP
 	echo "$myIP" > $dir/prevIP.txt
 
 #here document for index.html
@@ -73,9 +73,9 @@ cat <<- EOF > $html/error.html
 </html>
 EOF
 
-echo "upload new webpages to s3 static website"
+echo "upload new webpages to s3 static website" | logger -t myIP
 aws s3 cp $html $s3Website --recursive
 else
-	echo "no change in ip address: $myIP"
-	echo "no webpages uploaded"
+	echo "no change in ip address: $myIP" | logger -t myIP
+	echo "no webpages uploaded" | logger -t myIP
 fi	
