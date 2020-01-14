@@ -1,5 +1,5 @@
 # myIP
-## get your home public Internet IP Address displayed in an aws s3 website
+### get your home public Internet IP Address displayed in an aws s3 website
 
 ```
 I needed a way to keep track of my home Internet public IP Address
