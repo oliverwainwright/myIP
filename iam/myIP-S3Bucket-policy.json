@@ -9,8 +9,8 @@
                 "s3:GetObject"
             	],
             "Resource": [ 
-		"arn:aws:s3:::ogun.exit9web.com",
-		"arn:aws:s3:::ogun.exit9web.com/*"
+		"arn:aws:s3:::YOUR-BUCKET",
+		"arn:aws:s3:::YOUR-BUCKET/*"
 		]
         }
     ]
