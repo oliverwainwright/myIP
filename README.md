@@ -9,14 +9,14 @@ do not have a static IP Address and need access to resources on your home networ
 After much deliberation, I decided on AWS S3 Static Website to host the content. 
 Here's what you'll need to do to get this to work.
 
-1. Create a dedicated IAM user to upload files to your S3 bucket
+#1. Create a dedicated IAM user to upload files to your S3 bucket
   a. This user should have programmatic access only
   b. Save your credentials.csv file, it contains your secret key and access key
 
-2. Install and configure the aws-cli tool
+#2. Install and configure the aws-cli tool
   a. Use your credtials.csv to configure your aws cli
   
-3. Create IAM Policy
+#3. Create IAM Policy
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -43,11 +43,11 @@ Here's what you'll need to do to get this to work.
     ]
 }
 
-4. Create IAM Group and add newly created user to IAM Group
+#4. Create IAM Group and add newly created user to IAM Group
 
-5. Attach IAM Policy to the IAM Group
+#5. Attach IAM Policy to the IAM Group
 
-6. Create your AWS S3 bucket
+#6. Create your AWS S3 bucket
   a. Use your domainname, example: awesome-s3-site.com
   b. If you do not have a domain, then you can pick any globally unique bucket name
     i. you will access this bucket: http://YOUR-BUCKET.s3-website-REGION.amazonaws.com
@@ -59,7 +59,7 @@ Here's what you'll need to do to get this to work.
   h. Edit "Public Access Settings"
   i. Uncheck the box for "Block all public access"
 
-7. Create S3 Bucket Policy for your S3 bucket to permit anonymous access to webserver files.
+#7. Create S3 Bucket Policy for your S3 bucket to permit anonymous access to webserver files.
 {
     "Version": "2012-10-17",
     "Statement": [
